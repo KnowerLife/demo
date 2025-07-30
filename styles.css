@@ -1,4 +1,4 @@
-/* Recommendation: Consolidate all variables in a single :root block for better organization and avoid duplication. */
+/* Root variables for consistent theming */
 :root {
     --black: #000000;
     --white: #ffffff;
@@ -28,7 +28,7 @@
     --font-display: swap;
 }
 
-/* Recommendation: Use a CSS reset like normalize.css to ensure consistent styling across browsers. */
+/* CSS Reset */
 * {
     margin: 0;
     padding: 0;
@@ -46,7 +46,7 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Recommendation: Ensure high-contrast mode meets WCAG 2.1 AA contrast ratios for accessibility. */
+/* High contrast mode */
 body.high-contrast {
     --black: var(--high-contrast-black);
     --white: var(--high-contrast-white);
@@ -88,7 +88,6 @@ header {
     min-height: 80px;
 }
 
-/* Recommendation: Use WebP for background images and implement lazy-loading to optimize performance. */
 .hero {
     display: flex;
     align-items: center;
@@ -168,7 +167,6 @@ header.scrolled {
     transform: rotate(10deg);
 }
 
-/* Recommendation: Add role="navigation" and aria-label to nav-menu for improved accessibility. */
 .nav-menu {
     display: flex;
     list-style: none;
@@ -461,8 +459,7 @@ header.scrolled {
     margin-top: 1rem;
     padding: 1rem;
     background: var(--gray-10);
-    border-radiu
-s: var(--radius-sm);
+    border-radius: var(--radius-sm);
     color: var(--gray-70);
     display: none;
 }
@@ -1212,7 +1209,6 @@ textarea.form-control {
     z-index: 999;
     opacity: 0;
     visibility: hidden;
-    transform: translateY(20px);
     transition: var(--transition);
     box-shadow: var(--shadow-md);
     min-width: 48px;
@@ -1503,6 +1499,95 @@ footer {
     min-width: 150px;
     right: 0;
     left: auto;
+}
+
+/* Signup Modal */
+.signup-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10000;
+    align-items: center;
+    justify-content: center;
+}
+
+.signup-modal.active {
+    display: flex;
+}
+
+.signup-content {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: var(--radius-md);
+    max-width: 400px;
+    width: 90%;
+    box-shadow: var(--shadow-lg);
+}
+
+.signup-content .btn {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Skip Link */
+.skip-link {
+    position: absolute;
+    top: -100px;
+    left: 0;
+    background: var(--black);
+    color: var(--white);
+    padding: 0.5rem 1rem;
+    z-index: 10001;
+    transition: top 0.3s ease;
+}
+
+.skip-link:focus {
+    top: 0;
+}
+
+.cookie-consent {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: var(--gray-90);
+    color: var(--white);
+    padding: 1rem;
+    z-index: 10000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+.cookie-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    text-align: center;
+}
+.cookie-content p {
+    margin: 0;
+    color: var(--white);
+}
+.cookie-content button {
+    min-width: 100px;
+}
+
+/* Theme-based Grayscale */
+body:not(.grayscale):not(.dark-grayscale) .hero,
+body:not(.grayscale):not(.dark-grayscale) .video-card iframe,
+body:not(.grayscale):not(.dark-grayscale) .infographic-svg,
+body:not(.grayscale):not(.dark-grayscale) .image-placeholder {
+    filter: none;
+}
+
+/* Social Links Hover */
+.social-link:hover i {
+    transform: scale(1.2);
 }
 
 @media (max-width: 1024px) {
