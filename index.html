@@ -1,126 +1,21 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KNOWER LIFE - искусственный интеллект нового поколения для глубокого и осмысленного взаимодействия.">
-    <meta name="keywords" content="KNOWER LIFE, искусственный интеллект, AI, интеллектуальный помощник">
-    <meta property="og:title" content="KNOWER LIFE - Искусственный интеллект нового поколения">
-    <meta property="og:description" content="KNOWER LIFE – ваш интеллектуальный партнер для решения задач с помощью передового ИИ.">
-    <meta property="og:image" content="https://knowerlife.ru/og-image.webp">
-    <meta property="og:url" content="https://knowerlife.ru">
-    <meta property="og:type" content="website">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:site" content="@knowerlife">
-    <title>KNOWER LIFE - Искусственный интеллект нового поколения</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
-    <link rel="manifest" href="/manifest.json">
+    <title>KNOWER LIFE</title>
     <link rel="stylesheet" href="styles.css">
-    <script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script async src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "Organization",
-        "name": "KNOWER LIFE",
-        "url": "https://knowerlife.ru",
-        "logo": "https://knowerlife.ru/logo.png",
-        "contactPoint": {
-            "@type": "ContactPoint",
-            "telephone": "+7-999-999-99-99",
-            "contactType": "customer service",
-            "email": "info@knowerlife.ru"
-        },
-        "sameAs": [
-            "https://t.me/knowerlife",
-            "https://github.com/KnowerLife",
-            "https://facebook.com/knowerlife",
-            "https://vk.com/knowerlife",
-            "https://wa.me/knowerlife"
-        ]
-    }
-    </script>
-    <script type="application/ld+json">
-    {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-            {
-                "@type": "Question",
-                "name": "Чем KNOWER LIFE отличается от других AI?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "KNOWER LIFE использует передовые технологии ИИ для глубокого анализа контекста и предоставления точных, персонализированных решений."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Безопасны ли мои данные?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Мы придерживаемся строгих стандартов конфиденциальности в соответствии с законодательством о защите данных."
-                }
-            },
-            {
-                "@type": "Question",
-                "name": "Как начать использовать KNOWER LIFE?",
-                "acceptedAnswer": {
-                    "@type": "Answer",
-                    "text": "Просто заполните форму обратной связи или зарегистрируйтесь через форму регистрации."
-                }
-            }
-        ]
-    }
-    </script>
-    <script defer src="script.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.9.1/dist/chart.min.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="progress-bar" id="progressBar"></div>
-    <header role="banner">
+    <header>
         <div class="container header-container">
-            <a href="#hero" class="logo" aria-label="KNOWER LIFE Главная страница">
+            <a href="#" class="logo">
                 <i class="fas fa-brain logo-icon"></i>
                 KNOWER LIFE
             </a>
@@ -129,531 +24,441 @@
                 <button class="lang-btn" data-lang="en">EN</button>
             </div>
             <div class="theme-switcher">
-                <select id="themeSelect" aria-label="Выбрать тему">
+                <select id="themeSelect">
                     <option value="light">Light Grayscale</option>
                     <option value="dark">Dark Grayscale</option>
                     <option value="high-contrast">High Contrast</option>
                 </select>
             </div>
-            <div class="hamburger" id="hamburger" tabindex="0">
+            <div class="search-bar">
+                <input type="text" placeholder="Поиск..." aria-label="Поиск">
+                <button class="btn"><i class="fas fa-search"></i></button>
+            </div>
+            <nav>
+                <ul class="nav-menu" id="navMenu">
+                    <li style="--i: 1;"><a href="#home" class="active">Главная</a></li>
+                    <li style="--i: 2;"><a href="#about">Обо мне</a></li>
+                    <li style="--i: 3;" class="dropdown">
+                        <a href="#">Дополнительно <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#examples">Примеры запросов</a>
+                            <a href="#vpn">Бесплатный VPN</a>
+                            <a href="#gallery">Галерея</a>
+                            <a href="#development">Разработка</a>
+                            <a href="#api">API</a>
+                        </div>
+                    </li>
+                    <li style="--i: 4;" class="dropdown profile-menu">
+                        <a href="#">Профиль <i class="fas fa-chevron-down"></i></a>
+                        <div class="dropdown-content">
+                            <a href="#profile"><i class="fas fa-user"></i> Мой профиль</a>
+                            <a href="#settings"><i class="fas fa-cog"></i> Настройки</a>
+                            <a href="#logout"><i class="fas fa-sign-out-alt"></i> Выйти</a>
+                        </div>
+                    </li>
+                    <li style="--i: 5;"><a href="#benefits">Преимущества</a></li>
+                    <li style="--i: 6;"><a href="#contact">Контакты</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" id="hamburger" aria-label="Открыть меню" role="button">
                 <i class="fas fa-bars"></i>
             </div>
-            <ul class="nav-menu" id="navMenu">
-                <li style="--i: 1"><a href="#hero" class="active" aria-label="Главная страница">Главная</a></li>
-                <li style="--i: 2"><a href="#about" aria-label="Обо мне">Обо мне</a></li>
-                <li style="--i: 3" class="dropdown">
-                    <a href="#" aria-label="Дополнительно">Дополнительно <i class="fas fa-chevron-down" style="font-size: 0.8rem; margin-left: 5px;"></i></a>
-                    <div class="dropdown-content">
-                        <a href="#examples" aria-label="Примеры запросов">Примеры запросов</a>
-                        <a href="vpn.html" aria-label="Бесплатный VPN">Бесплатный VPN</a>
-                        <a href="gallery.html" aria-label="Галерея">Галерея</a>
-                        <a href="development.html" aria-label="Разработка">Разработка</a>
-                        <a href="https://x.ai/api" aria-label="API KNOWER LIFE">API</a>
-                    </div>
-                </li>
-                <li style="--i: 5" class="dropdown profile-menu">
-                    <a href="#" aria-label="Профиль"><i class="fas fa-user"></i> Профиль</a>
-                    <div class="dropdown-content">
-                        <a href="#profile" aria-label="Мой профиль">Мой профиль</a>
-                        <a href="#settings" aria-label="Настройки">Настройки</a>
-                        <a href="#logout" aria-label="Выйти">Выйти</a>
-                    </div>
-                </li>
-                <li style="--i: 4"><a href="#advantages" aria-label="Преимущества">Преимущества</a></li>
-                <li style="--i: 6"><a href="#contact" aria-label="Контакты">Контакты</a></li>
-            </ul>
         </div>
     </header>
-    <section class="hero" id="hero" role="region" aria-label="Главная секция">
-        <div class="ai-pulse"></div>
-        <div class="ai-pulse"></div>
-        <div class="container">
+
+    <main>
+        <section class="hero section" id="home">
+            <div class="ai-pulse"></div>
+            <div class="ai-pulse"></div>
             <div class="hero-content">
-                <h1><span class="typed-text" id="typedText"></span></h1>
+                <h1>Ваш интеллектуальный партнер: <span id="typedText" class="typed-text"></span></h1>
                 <p>Забудьте о простых чат-ботах. Я – следующее поколение искусственного интеллекта, созданный для глубокого, осмысленного и полезного взаимодействия. Моя продвинутая нейросеть позволяет мне не просто отвечать на вопросы, а понимать контекст, анализировать запросы и создавать уникальный контент, адаптированный именно под вас.</p>
                 <div class="chatbot-widget">
-                    <input type="text" id="chatInput" class="form-control" placeholder="Попробуйте задать вопрос..." aria-label="Поле ввода чатбота">
-                    <button class="btn" id="chatSubmit">Отправить</button>
-                    <div class="chatbot-response" id="chatResponse">Пример ответа: KNOWER LIFE может помочь с написанием текстов, анализом данных и многим другим!</div>
+                    <input type="text" id="chatInput" placeholder="Задайте мне вопрос..." aria-label="Задайте вопрос">
+                    <button id="chatSubmit" class="btn">Отправить</button>
+                    <div id="chatResponse" class="chatbot-response">Пример ответа: KNOWER LIFE может помочь с написанием текстов, анализом данных и многим другим!</div>
                 </div>
-                <a href="#contact" class="btn">Попробовать сейчас</a>
-                <img src="hero-image.webp" srcset="hero-image-320w.webp 320w, hero-image-640w.webp 640w, hero-image-1280w.webp 1280w" sizes="(max-width: 600px) 320px, (max-width: 1200px) 640px, 1280px" alt="KNOWER LIFE Hero Image" loading="lazy" style="width: 100%; height: 200px; margin-top: 2rem; filter: grayscale(100%);">
+                <a href="#try-now" class="btn">Попробовать сейчас</a>
             </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="about" role="region" aria-label="Обо мне">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="about">
+            <div class="container text-center">
                 <h2>Обо мне</h2>
                 <p>KNOWER LIFE – это ваш интеллектуальный партнер, созданный для упрощения взаимодействия с цифровым миром. Я использую передовые технологии ИИ, чтобы предоставлять точные, релевантные и креативные решения для ваших задач. От генерации текстов до программирования и планирования – я здесь, чтобы помочь вам достичь большего.</p>
-                <svg class="infographic-svg" viewBox="0 0 200 200" aria-label="Инфографика возможностей искусственного интеллекта KNOWER LIFE">
-                    <title>Инфографика возможностей ИИ</title>
-                    <circle cx="100" cy="100" r="80" fill="var(--gray-20)" />
-                    <circle cx="60" cy="60" r="20" fill="var(--gray-50)" />
-                    <circle cx="140" cy="60" r="20" fill="var(--gray-50)" />
-                    <circle cx="60" cy="140" r="20" fill="var(--gray-50)" />
-                    <circle cx="140" cy="140" r="20" fill="var(--gray-50)" />
-                    <text x="100" y="105" text-anchor="middle" font-size="12" fill="var(--gray-90)">AI Capabilities</text>
-                </svg>
+                <div class="card">
+                    <i class="fas fa-robot card-icon"></i>
+                    <h3>AI Capabilities</h3>
+                    <p>Узнайте больше о моих возможностях.</p>
+                </div>
             </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="timeline" role="region" aria-label="История развития">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="history">
+            <div class="container text-center">
                 <h2>История развития</h2>
                 <p>Основные вехи в развитии KNOWER LIFE.</p>
+                <div class="timeline">
+                    <div class="timeline-item" style="--i: 1;">
+                        <div class="timeline-content left">
+                            <h3>2023: Запуск KNOWER LIFE</h3>
+                            <p>Интеграция с KNOWER LIFE для расширенных возможностей ИИ.</p>
+                            <span class="timeline-dot"></span>
+                        </div>
+                    </div>
+                    <div class="timeline-item" style="--i: 2;">
+                        <div class="timeline-content right">
+                            <h3>2024: XLSX Анализ</h3>
+                            <p>Добавлена функция обработки и визуализации данных из XLSX.</p>
+                            <span class="timeline-dot"></span>
+                        </div>
+                    </div>
+                    <div class="timeline-item" style="--i: 3;">
+                        <div class="timeline-content left">
+                            <h3>2025: Глобальная локализация</h3>
+                            <p>Поддержка нескольких языков для международных пользователей.</p>
+                            <span class="timeline-dot"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="timeline">
-                <div class="timeline-item" style="--i: 1">
-                    <div class="timeline-content left">
-                        <h3>2023: Запуск KNOWER LIFE</h3>
-                        <p>Интеграция с KNOWER LIFE для расширенных возможностей ИИ.</p>
-                        <div class="timeline-dot"></div>
-                    </div>
-                </div>
-                <div class="timeline-item" style="--i: 2">
-                    <div class="timeline-content right">
-                        <h3>2024: XLSX Анализ</h3>
-                        <p>Добавлена функция обработки и визуализации данных из XLSX.</p>
-                        <div class="timeline-dot"></div>
-                    </div>
-                </div>
-                <div class="timeline-item" style="--i: 3">
-                    <div class="timeline-content left">
-                        <h3>2025: Глобальная локализация</h3>
-                        <p>Поддержка нескольких языков для международных пользователей.</p>
-                        <div class="timeline-dot"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="stats" style="background-color: var(--gray-10);" role="region" aria-label="Статистика использования">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="stats">
+            <div class="container text-center">
                 <h2>Статистика использования</h2>
                 <p>Узнайте, как KNOWER LIFE помогает пользователям по всему миру.</p>
+                <div class="grid grid-cols-3">
+                    <div class="stats-card" style="--i: 1;">
+                        <div class="stats-number" id="statsQueries" data-target="10000">0</div>
+                        <p>Запросов обработано</p>
+                    </div>
+                    <div class="stats-card" style="--i: 2;">
+                        <div class="stats-number" id="statsFiles" data-target="5000">0</div>
+                        <p>Файлов проанализировано</p>
+                    </div>
+                    <div class="stats-card" style="--i: 3;">
+                        <div class="stats-number" id="statsUsers" data-target="2000">0</div>
+                        <p>Активных пользователей</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3">
-                <div class="stats-card" style="--i: 1">
-                    <div class="stats-number" id="statsQueries">0</div>
-                    <p>Запросов обработано</p>
-                </div>
-                <div class="stats-card" style="--i: 2">
-                    <div class="stats-number" id="statsFiles">0</div>
-                    <p>Файлов проанализировано</p>
-                </div>
-                <div class="stats-card" style="--i: 3">
-                    <div class="stats-number" id="statsUsers">0</div>
-                    <p>Активных пользователей</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="examples" role="region" aria-label="Примеры запросов">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="examples">
+            <div class="container text-center">
                 <h2>Примеры запросов</h2>
                 <p>Эти запросы могут быть адаптированы и изменены в соответствии с вашими потребностями и интересами. Чем я могу быть вам полезен? Практически всем! Моя сила – в универсальности и глубине знаний.</p>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all" role="button">Все</button>
-                    <button class="filter-btn" data-filter="text" role="button">Текст</button>
-                    <button class="filter-btn" data-filter="programming" role="button">Программирование</button>
-                    <button class="filter-btn" data-filter="learning" role="button">Обучение</button>
+                    <button class="filter-btn active" data-filter="all">Все</button>
+                    <button class="filter-btn" data-filter="text">Текст</button>
+                    <button class="filter-btn" data-filter="programming">Программирование</button>
+                    <button class="filter-btn" data-filter="learning">Обучение</button>
+                </div>
+                <div class="grid grid-cols-4" id="exampleCards">
+                    <div class="card" data-category="text" style="--i: 1;">
+                        <h3>Генерация и работа с текстом</h3>
+                        <ul>
+                            <li>Создать убедительное деловое письмо, креативный пост для соцсетей или захватывающий рассказ.</li>
+                            <li>Отредактировать текст, улучшить стиль, проверить грамматику.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="text" style="--i: 2;">
+                        <h3>Поиск и анализ информации</h3>
+                        <ul>
+                            <li>Найти свежие новости по вашей теме, сравнить данные, объяснить сложные концепции простыми словами.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="text" style="--i: 3;">
+                        <h3>Творчество и медиа</h3>
+                        <ul>
+                            <li>Сгенерировать идеи для проектов, написать стихи или сценарий, помочь с описанием для создания изображений.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="learning" style="--i: 4;">
+                        <h3>Обучение и саморазвитие</h3>
+                        <ul>
+                            <li>Объяснить учебный материал, подобрать ресурсы для изучения языка или программирования, создать план обучения.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="programming" style="--i: 5;">
+                        <h3>Программирование и техническая помощь</h3>
+                        <ul>
+                            <li>Помочь найти и исправить ошибки в коде, объяснить алгоритмы, предложить примеры кода для разных задач.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="text" style="--i: 6;">
+                        <h3>Работа с документами</h3>
+                        <ul>
+                            <li>Помочь структурировать отчет, предложить идеи для слайдов, подсказать, как использовать функции Word/Excel/PowerPoint.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="text" style="--i: 7;">
+                        <h3>Перевод и коммуникация</h3>
+                        <ul>
+                            <li>Перевести текст с сохранением смысла и стиля, помочь подобрать корректные фразы для общения.</li>
+                        </ul>
+                    </div>
+                    <div class="card" data-category="learning" style="--i: 8;">
+                        <h3>Планирование и организация</h3>
+                        <ul>
+                            <li>Помочь расставить приоритеты, составить список задач, предложить методы тайм-менеджмента.</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-            <div class="grid grid-cols-4" id="exampleCards">
-                <div class="card" style="--i: 1" data-category="text">
-                    <i class="fas fa-file-alt card-icon"></i>
-                    <h3>Генерация и работа с текстом</h3>
-                    <ul>
-                        <li>Создать убедительное деловое письмо, креативный пост для соцсетей или захватывающий рассказ.</li>
-                        <li>Отредактировать текст, улучшить стиль, проверить грамматику.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 2" data-category="text">
-                    <i class="fas fa-search card-icon"></i>
-                    <h3>Поиск и анализ информации</h3>
-                    <ul>
-                        <li>Найти свежие новости по вашей теме, сравнить данные, объяснить сложные концепции простыми словами.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 3" data-category="text">
-                    <i class="fas fa-paint-brush card-icon"></i>
-                    <h3>Творчество и медиа</h3>
-                    <ul>
-                        <li>Сгенерировать идеи для проектов, написать стихи или сценарий, помочь с описанием для создания изображений.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 4" data-category="learning">
-                    <i class="fas fa-book card-icon"></i>
-                    <h3>Обучение и саморазвитие</h3>
-                    <ul>
-                        <li>Объяснить учебный материал, подобрать ресурсы для изучения языка или программирования, создать план обучения.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 5" data-category="programming">
-                    <i class="fas fa-code card-icon"></i>
-                    <h3>Программирование и техническая помощь</h3>
-                    <ul>
-                        <li>Помочь найти и исправить ошибки в коде, объяснить алгоритмы, предложить примеры кода для разных задач.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 6" data-category="text">
-                    <i class="fas fa-file-powerpoint card-icon"></i>
-                    <h3>Работа с документами</h3>
-                    <ul>
-                        <li>Помочь структурировать отчет, предложить идеи для слайдов, подсказать, как использовать функции Word/Excel/PowerPoint.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 7" data-category="text">
-                    <i class="fas fa-language card-icon"></i>
-                    <h3>Перевод и коммуникация</h3>
-                    <ul>
-                        <li>Перевести текст с сохранением смысла и стиля, помочь подобрать корректные фразы для общения.</li>
-                    </ul>
-                </div>
-                <div class="card" style="--i: 8" data-category="learning">
-                    <i class="fas fa-calendar-alt card-icon"></i>
-                    <h3>Планирование и организация</h3>
-                    <ul>
-                        <li>Помочь расставить приоритеты, составить список задач, предложить методы тайм-менеджмента.</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="showcase" style="background-color: var(--gray-10);" role="region" aria-label="Демонстрация возможностей">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="showcase">
+            <div class="container text-center">
                 <h2>Демонстрация возможностей</h2>
                 <p>Загрузите XLSX-файл, чтобы увидеть, как KNOWER LIFE может обработать ваши данные и представить их в удобном формате.</p>
-                <div class="form-group" style="--i: 1">
-                    <input type="file" id="xlsxUpload" accept=".xlsx" class="form-control" aria-label="Загрузить XLSX файл" tabindex="0">
-                    <div class="loader" id="xlsxLoader"></div>
-                </div>
-                <div id="showcaseTable"></div>
-                <canvas id="dataChart" style="max-width: 600px; margin: 2rem auto;"></canvas>
+                <input type="file" id="xlsxUpload" accept=".xlsx" aria-label="Загрузить XLSX файл">
+                <div class="loader" id="xlsxLoader"></div>
+                <div id="showcaseTable" class="showcase-table"></div>
+                <canvas id="dataChart"></canvas>
             </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="case-studies" role="region" aria-label="Кейсы">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="case-studies">
+            <div class="container text-center">
                 <h2>Кейсы</h2>
                 <p>Посмотрите, как KNOWER LIFE помогает решать реальные задачи.</p>
+                <div class="grid grid-cols-3">
+                    <div class="case-study-card" style="--i: 1;">
+                        <div class="image-placeholder">Case Study Image</div>
+                        <h3>Ускорение бизнес-процессов</h3>
+                        <p>Компания увеличила эффективность на 30% благодаря автоматизации отчетов с помощью KNOWER LIFE.</p>
+                    </div>
+                    <div class="case-study-card" style="--i: 2;">
+                        <div class="image-placeholder">Case Study Image</div>
+                        <h3>Обучение программированию</h3>
+                        <p>Студент освоил Python за 2 месяца с персонализированным планом от KNOWER LIFE.</p>
+                    </div>
+                    <div class="case-study-card" style="--i: 3;">
+                        <div class="image-placeholder">Case Study Image</div>
+                        <h3>Контент для соцсетей</h3>
+                        <p>Блогер увеличил вовлеченность на 50% с креативными постами, созданными KNOWER LIFE.</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3">
-                <div class="case-study-card" style="--i: 1">
-                    <img src="case-study-1.webp" srcset="case-study-1-320w.webp 320w, case-study-1-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Ускорение бизнес-процессов" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
-                    <h3>Ускорение бизнес-процессов</h3>
-                    <p>Компания увеличила эффективность на 30% благодаря автоматизации отчетов с помощью KNOWER LIFE.</p>
-                </div>
-                <div class="case-study-card" style="--i: 2">
-                    <img src="case-study-2.webp" srcset="case-study-2-320w.webp 320w, case-study-2-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Обучение программированию" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
-                    <h3>Обучение программированию</h3>
-                    <p>Студент освоил Python за 2 месяца с персонализированным планом от KNOWER LIFE.</p>
-                </div>
-                <div class="case-study-card" style="--i: 3">
-                    <img src="case-study-3.webp" srcset="case-study-3-320w.webp 320w, case-study-3-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Контент для соцсетей" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
-                    <h3>Контент для соцсетей</h3>
-                    <p>Блогер увеличил вовлеченность на 50% с креативными постами, созданными KNOWER LIFE.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="tutorials" role="region" aria-label="Видеоуроки">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="tutorials">
+            <div class="container text-center">
                 <h2>Видеоуроки</h2>
                 <p>Посмотрите, как использовать KNOWER LIFE для различных задач.</p>
+                <div class="grid grid-cols-3">
+                    <div class="video-card" style="--i: 1;">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Анализ данных"></iframe>
+                        <h3>Анализ данных</h3>
+                    </div>
+                    <div class="video-card" style="--i: 2;">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Создание контента"></iframe>
+                        <h3>Создание контента</h3>
+                    </div>
+                    <div class="video-card" style="--i: 3;">
+                        <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Программирование"></iframe>
+                        <h3>Программирование</h3>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3">
-                <div class="video-card" style="--i: 1">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Как использовать KNOWER LIFE для анализа данных" loading="lazy"></iframe>
-                    <h3>Анализ данных</h3>
-                </div>
-                <div class="video-card" style="--i: 2">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Создание контента с KNOWER LIFE" loading="lazy"></iframe>
-                    <h3>Создание контента</h3>
-                </div>
-                <div class="video-card" style="--i: 3">
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Программирование с KNOWER LIFE" loading="lazy"></iframe>
-                    <h3>Программирование</h3>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="faq" style="background-color: var(--gray-10);" role="region" aria-label="Часто задаваемые вопросы">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="faq">
+            <div class="container text-center">
                 <h2>Часто задаваемые вопросы</h2>
                 <p>Ответы на популярные вопросы о возможностях KNOWER LIFE.</p>
-            </div>
-            <div class="faq-item" style="--i: 1">
-                <div class="faq-question" tabindex="0">
-                    Чем KNOWER LIFE отличается от других AI?
-                    <i class="fas fa-chevron-down"></i>
+                <div class="faq-item">
+                    <div class="faq-question">Чем KNOWER LIFE отличается от других AI? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">KNOWER LIFE использует передовые технологии ИИ для глубокого анализа контекста и предоставления точных, персонализированных решений, адаптированных под ваши задачи.</div>
                 </div>
-                <div class="faq-answer">
-                    KNOWER LIFE использует передовые технологии ИИ для глубокого анализа контекста и предоставления точных, персонализированных решений, адаптированных под ваши задачи.
+                <div class="faq-item">
+                    <div class="faq-question">Безопасны ли мои данные? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Мы придерживаемся строгих стандартов конфиденциальности в соответствии с Федеральным законом №152-ФЗ «О персональных данных».</div>
                 </div>
-            </div>
-            <div class="faq-item" style="--i: 2">
-                <div class="faq-question" tabindex="0">
-                    Безопасны ли мои данные?
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    Мы придерживаемся строгих стандартов конфиденциальности в соответствии с Федеральным законом №152-ФЗ «О персональных данных».
+                <div class="faq-item">
+                    <div class="faq-question">Как начать использовать KNOWER LIFE? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer">Просто заполните форму обратной связи или зарегистрируйтесь через форму регистрации.</div>
                 </div>
             </div>
-            <div class="faq-item" style="--i: 3">
-                <div class="faq-question" tabindex="0">
-                    Как начать использовать KNOWER LIFE?
-                    <i class="fas fa-chevron-down"></i>
-                </div>
-                <div class="faq-answer">
-                    Просто заполните форму обратной связи или зарегистрируйтесь через <a href="#signup">форму регистрации</a>.
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="advantages" role="region" aria-label="Преимущества">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="benefits">
+            <div class="container text-center">
                 <h2>Преимущества</h2>
                 <p>KNOWER LIFE – это не просто поисковик, это ваш интеллектуальный партнер. Я здесь, чтобы расширять ваши возможности, вдохновлять на новые идеи и помогать решать задачи любой сложности.</p>
+                <div class="grid grid-cols-3">
+                    <div class="card" style="--i: 1;">
+                        <i class="fas fa-tools card-icon"></i>
+                        <h3>Многофункциональность</h3>
+                        <p>Забудьте о переключении между десятками инструментов. От ответа на сложный вопрос до генерации креатива – я ваш универсальный помощник.</p>
+                    </div>
+                    <div class="card" style="--i: 2;">
+                        <i class="fas fa-check-circle card-icon"></i>
+                        <h3>Высочайшая точность</h3>
+                        <p>Мои ответы основаны на обработке огромных массивов информации с акцентом на достоверность и релевантность вашему запросу.</p>
+                    </div>
+                    <div class="card" style="--i: 3;">
+                        <i class="fas fa-bolt card-icon"></i>
+                        <h3>Молниеносная скорость</h3>
+                        <p>Получайте результаты мгновенно благодаря оптимизированной архитектуре.</p>
+                    </div>
+                </div>
             </div>
-            <div class="grid grid-cols-3">
-                <div class="card" style="--i: 1">
-                    <i class="fas fa-tools card-icon"></i>
-                    <h3>Многофункциональность</h3>
-                    <p>Забудьте о переключении между десятками инструментов. От ответа на сложный вопрос до генерации креатива – я ваш универсальный помощник.</p>
-                </div>
-                <div class="card" style="--i: 2">
-                    <i class="fas fa-bullseye card-icon"></i>
-                    <h3>Высочайшая точность</h3>
-                    <p>Мои ответы основаны на обработке огромных массивов информации с акцентом на достоверность и релевантность вашему запросу.</p>
-                </div>
-                <div class="card" style="--i: 3">
-                    <i class="fas fa-bolt card-icon"></i>
-                    <h3>Молниеносная скорость</h3>
-                    <p>Получайте результаты мгновенно благодаря оптимизированной архитектуре.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="testimonials" role="region" aria-label="Отзывы">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="testimonials">
+            <div class="container text-center">
                 <h2>Что говорят пользователи</h2>
                 <p>Реальные истории успеха от наших пользователей.</p>
-            </div>
-            <div class="grid grid-cols-3">
-                <div class="testimonial-card" style="--i: 1">
-                    <img src="user-1.webp" srcset="user-1-80w.webp 80w" sizes="80px" alt="Анна, Аналитик данных" loading="lazy" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%);">
-                    <p>"KNOWER LIFE помог мне автоматизировать анализ данных, сэкономив часы работы!"</p>
-                    <cite>Анна, Аналитик данных</cite>
-                </div>
-                <div class="testimonial-card" style="--i: 2">
-                    <img src="user-2.webp" srcset="user-2-80w.webp 80w" sizes="80px" alt="Иван, Блогер" loading="lazy" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%);">
-                    <p>"Благодаря KNOWER LIFE я создал профессиональный контент для своего блога за считанные минуты."</p>
-                    <cite>Иван, Блогер</cite>
-                </div>
-                <div class="testimonial-card" style="--i: 3">
-                    <div class="image-placeholder" style="width: 80px; height: 80px;" loading="lazy">
-                        Add User Image Here
+                <div class="grid grid-cols-3">
+                    <div class="testimonial-card" style="--i: 1;">
+                        <div class="image-placeholder">User Image</div>
+                        <p>"KNOWER LIFE помог мне автоматизировать анализ данных, сэкономив часы работы!"</p>
+                        <cite>Анна, Аналитик данных</cite>
                     </div>
-                    <p>"Интуитивный интерфейс и мощные возможности сделали KNOWER LIFE незаменимым инструментом."</p>
-                    <cite>Мария, Студентка</cite>
+                    <div class="testimonial-card" style="--i: 2;">
+                        <div class="image-placeholder">User Image</div>
+                        <p>"Благодаря KNOWER LIFE я создал профессиональный контент для своего блога за считанные минуты."</p>
+                        <cite>Иван, Блогер</cite>
+                    </div>
+                    <div class="testimonial-card" style="--i: 3;">
+                        <div class="image-placeholder">Add User Image Here</div>
+                        <p>"Интуитивный интерфейс и мощные возможности сделали KNOWER LIFE незаменимым инструментом."</p>
+                        <cite>Мария, Студентка</cite>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="blog" style="background-color: var(--gray-10);" role="region" aria-label="Блог">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="blog">
+            <div class="container text-center">
                 <h2>Наш блог</h2>
                 <p>Полезные статьи и советы по использованию KNOWER LIFE.</p>
-            </div>
-            <div class="grid grid-cols-3">
-                <div class="blog-card" style="--i: 1">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        Add Blog Image Here
+                <div class="grid grid-cols-3">
+                    <div class="blog-card" style="--i: 1;">
+                        <div class="image-placeholder">Add Blog Image Here</div>
+                        <h3><a href="#">Как ИИ меняет бизнес</a></h3>
+                        <p>Узнайте, как искусственный интеллект помогает оптимизировать процессы.</p>
                     </div>
-                    <h3><a href="blog.html">Как ИИ меняет бизнес</a></h3>
-                    <p>Узнайте, как искусственный интеллект помогает оптимизировать процессы.</p>
-                </div>
-                <div class="blog-card" style="--i: 2">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        Add Blog Thumbnail Here
+                    <div class="blog-card" style="--i: 2;">
+                        <div class="image-placeholder">Add Blog Thumbnail Here</div>
+                        <h3><a href="#">Советы по изучению программирования</a></h3>
+                        <p>Пошаговое руководство для начинающих программистов.</p>
                     </div>
-                    <h3><a href="blog.html">Советы по изучению программирования</a></h3>
-                    <p>Пошаговое руководство для начинающих программистов.</p>
-                </div>
-                <div class="blog-card" style="--i: 3">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        Add Blog Thumbnail Here
+                    <div class="blog-card" style="--i: 3;">
+                        <div class="image-placeholder">Add Blog Thumbnail Here</div>
+                        <h3><a href="#">Креативный контент с ИИ</a></h3>
+                        <p>Как использовать ИИ для создания уникального контента.</p>
                     </div>
-                    <h3><a href="blog.html">Креативный контент с ИИ</a></h3>
-                    <p>Как использовать ИИ для создания уникального контента.</p>
                 </div>
             </div>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" id="contact" role="region" aria-label="Обратная связь">
-        <div class="container">
-            <div class="text-center">
+        </section>
+
+        <section class="section" id="contact">
+            <div class="container text-center">
                 <h2>Обратная связь</h2>
                 <p>Поделитесь мнением о нашей работе или задайте нам любой интересующий вас вопрос в поле комментарий.</p>
-            </div>
-            <form class="grid grid-cols-2 gap-6 contact-form" id="contactForm">
-                <div class="form-group" style="--i: 1">
-                    <label for="first-name">Имя</label>
-                    <input type="text" id="first-name" class="form-control" required aria-label="Имя" tabindex="0">
-                </div>
-                <div class="form-group" style="--i: 2">
-                    <label for="last-name">Фамилия</label>
-                    <input type="text" id="last-name" class="form-control" required aria-label="Фамилия" tabindex="0">
-                </div>
-                <div class="form-group" style="--i: 3">
-                    <label for="phone">Телефон</label>
-                    <input type="tel" id="phone" class="form-control" placeholder="+7 (___) ___-__-__" aria-label="Телефон" tabindex="0">
-                </div>
-                <div class="form-group" style="--i: 4">
-                    <label for="email">E-mail</label>
-                    <input type="email" id="email" class="form-control" required aria-label="E-mail" tabindex="0">
-                </div>
-                <div class="form-group" style="--i: 5; grid-column: span 2;">
-                    <label for="comment">Комментарий</label>
-                    <textarea id="comment" class="form-control" required aria-label="Комментарий" placeholder="Расскажите, чем я могу вам помочь..." tabindex="0"></textarea>
-                </div>
-                <div class="form-group" style="--i: 6; grid-column: span 2;">
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="consent" required aria-label="Согласие на обработку данных" tabindex="0">
+                <form id="contactForm" class="contact-form grid grid-cols-2">
+                    <div class="form-group" style="--i: 1;">
+                        <label for="firstName">Имя</label>
+                        <input type="text" id="firstName" class="form-control" placeholder="Имя" aria-label="Имя" required>
+                    </div>
+                    <div class="form-group" style="--i: 2;">
+                        <label for="lastName">Фамилия</label>
+                        <input type="text" id="lastName" class="form-control" placeholder="Фамилия" aria-label="Фамилия" required>
+                    </div>
+                    <div class="form-group" style="--i: 3;">
+                        <label for="phone">Телефон</label>
+                        <input type="tel" id="phone" class="form-control" placeholder="Телефон" aria-label="Телефон">
+                    </div>
+                    <div class="form-group" style="--i: 4;">
+                        <label for="email">E-mail</label>
+                        <input type="email" id="email" class="form-control" placeholder="E-mail" aria-label="E-mail" required>
+                    </div>
+                    <div class="form-group" style="--i: 5; grid-column: span 2;">
+                        <label for="comment">Комментарий</label>
+                        <textarea id="comment" class="form-control" placeholder="Комментарий" aria-label="Комментарий"></textarea>
+                    </div>
+                    <div class="form-group checkbox-group" style="--i: 6; grid-column: span 2;">
+                        <input type="checkbox" id="consent" required>
                         <label for="consent">Нажимая кнопку «Отправить», я даю свое согласие на обработку моих персональных данных, в соответствии с Федеральным законом от 27.07.2006 года №152-ФЗ «О персональных данных», на условиях и для целей, определенных в Согласии на обработку персональных данных</label>
                     </div>
-                </div>
-                <div class="form-group" style="--i: 7; grid-column: span 2; text-align: center;">
-                    <button type="submit" class="btn" tabindex="0">Отправить</button>
-                </div>
-            </form>
-        </div>
-    </section>
-    <div class="section-divider"></div>
-    <section class="section" style="background-color: var(--gray-10);" role="region" aria-label="Соцсети">
-        <div class="container">
-            <div class="text-center">
+                    <div class="form-group" style="--i: 7; grid-column: span 2;">
+                        <button type="submit" class="btn">Отправить</button>
+                    </div>
+                </form>
+            </div>
+        </section>
+
+        <section class="section" id="social">
+            <div class="container text-center">
                 <h2>Мы в соцсетях</h2>
                 <p>Обратная связь и реклама на сайте играют ключевую роль в развитии. Ваша обратная связь помогает улучшать продукты и услуги, делая их более соответствующими потребностям и ожиданиям.</p>
+                <div class="social-links">
+                    <a href="#" class="social-link" style="--i: 1;"><i class="fas fa-envelope"></i> Email</a>
+                    <a href="#" class="social-link" style="--i: 2;"><i class="fab fa-telegram"></i> Telegram</a>
+                    <a href="#" class="social-link" style="--i: 3;"><i class="fab fa-facebook"></i> FaceBook</a>
+                    <a href="#" class="social-link" style="--i: 4;"><i class="fab fa-vk"></i> VK</a>
+                    <a href="#" class="social-link" style="--i: 5;"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+                    <a href="#" class="social-link" style="--i: 6;"><i class="fab fa-youtube"></i> YouTube</a>
+                    <a href="#" class="social-link" style="--i: 7;"><i class="fab fa-twitter"></i> Twitter</a>
+                    <a href="#" class="social-link" style="--i: 8;"><i class="fab fa-instagram"></i> Instagram</a>
+                    <a href="#" class="social-link" style="--i: 9;"><i class="fab fa-github"></i> GitHub</a>
+                    <a href="#" class="social-link" style="--i: 10;"><i class="fas fa-video"></i> RuTube</a>
+                </div>
             </div>
-            <div class="social-links">
-                <a href="mailto:info@knowerlife.ru" class="social-link" style="--i: 1" aria-label="Email KNOWER LIFE" tabindex="0">
-                    <i class="fas fa-envelope"></i>
-                    Email
-                </a>
-                <a href="https://t.me/knowerlife" class="social-link" style="--i: 2" aria-label="Telegram KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-telegram-plane"></i>
-                    Telegram
-                </a>
-                <a href="https://facebook.com/knowerlife" class="social-link" style="--i: 3" aria-label="Facebook KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-facebook-f"></i>
-                    FaceBook
-                </a>
-                <a href="https://vk.com/knowerlife" class="social-link" style="--i: 4" aria-label="VK KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-vk"></i>
-                    VK
-                </a>
-                <a href="https://wa.me/knowerlife" class="social-link" style="--i: 5" aria-label="WhatsApp KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-whatsapp"></i>
-                    WhatsApp
-                </a>
-                <a href="https://youtube.com/knowerlife" class="social-link" style="--i: 6" aria-label="YouTube KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-youtube"></i>
-                    YouTube
-                </a>
-                <a href="https://twitter.com/knowerlife" class="social-link" style="--i: 7" aria-label="Twitter KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-twitter"></i>
-                    Twitter
-                </a>
-                <a href="https://instagram.com/knowerlife" class="social-link" style="--i: 8" aria-label="Instagram KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-instagram"></i>
-                    Instagram
-                </a>
-                <a href="https://github.com/KnowerLife" class="social-link" style="--i: 9" aria-label="GitHub KNOWER LIFE" tabindex="0">
-                    <i class="fab fa-github"></i>
-                    GitHub
-                </a>
-                <a href="https://rutube.ru/knowerlife" class="social-link" style="--i: 10" aria-label="RuTube KNOWER LIFE" tabindex="0">
-                    <i class="fas fa-video"></i>
-                    RuTube
-                </a>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-grid">
+            <div class="footer-section">
+                <h3>KNOWER LIFE</h3>
+                <p>Искусственный интеллект нового поколения, созданный для глубокого, осмысленного и полезного взаимодействия.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Навигация</h3>
+                <ul>
+                    <li><a href="#home">Главная</a></li>
+                    <li><a href="#about">Обо мне</a></li>
+                    <li><a href="#examples">Примеры запросов</a></li>
+                    <li><a href="#benefits">Преимущества</a></li>
+                    <li><a href="#contact">Контакты</a></li>
+                    <li><a href="#vpn">Бесплатный VPN</a></li>
+                    <li><a href="#gallery">Галерея</a></li>
+                    <li><a href="#development">Разработка</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h3>Контакты</h3>
+                <ul>
+                    <li><i class="fas fa-envelope"></i> info@knowerlife.ru</li>
+                    <li><i class="fas fa-phone"></i> +7 (999) 999-99-99</li>
+                </ul>
+                <div class="social-icons">
+                    <a href="#" class="social-icon"><i class="fab fa-vk"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-youtube"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-telegram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-instagram"></i></a>
+                    <a href="#" class="social-icon"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Подписка</h3>
+                <form class="newsletter-form" id="newsletterForm">
+                    <input type="email" placeholder="Ваш email" aria-label="Ваш email" required>
+                    <button type="submit" class="btn">Подписаться</button>
+                </form>
             </div>
         </div>
-    </section>
-    <footer role="contentinfo">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-section">
-                    <h3>KNOWER LIFE</h3>
-                    <p>Искусственный интеллект нового поколения, созданный для глубокого, осмысленного и полезного взаимодействия.</p>
-                </div>
-                <div class="footer-section">
-                    <h3>Навигация</h3>
-                    <ul>
-                        <li><a href="#hero" aria-label="Главная страница" tabindex="0">Главная</a></li>
-                        <li><a href="#about" aria-label="Обо мне" tabindex="0">Обо мне</a></li>
-                        <li><a href="#examples" aria-label="Примеры запросов" tabindex="0">Примеры запросов</a></li>
-                        <li><a href="#advantages" aria-label="Преимущества" tabindex="0">Преимущества</a></li>
-                        <li><a href="#contact" aria-label="Контакты" tabindex="0">Контакты</a></li>
-                        <li><a href="vpn.html" aria-label="Бесплатный VPN" tabindex="0">Бесплатный VPN</a></li>
-                        <li><a href="gallery.html" aria-label="Галерея">Галерея</a></li>
-                        <li><a href="development.html" aria-label="Разработка">Разработка</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Контакты</h3>
-                    <ul>
-                        <li><i class="fas fa-envelope"></i><a href="mailto:info@knowerlife.ru" aria-label="Email KNOWER LIFE">info@knowerlife.ru</a></li>
-                        <li><i class="fas fa-phone"></i><a href="tel:+79999999999" aria-label="Телефон KNOWER LIFE">+7 (999) 999-99-99</a></li>
-                    </ul>
-                    <h3>Соцсети</h3>
-                    <div class="social-icons">
-                        <a href="https://t.me/knowerlife" aria-label="Telegram KNOWER LIFE"><i class="fab fa-telegram-plane"></i></a>
-                        <a href="https://github.com/KnowerLife" aria-label="GitHub KNOWER LIFE"><i class="fab fa-github"></i></a>
-                        <a href="https://facebook.com/knowerlife" aria-label="Facebook KNOWER LIFE"><i class="fab fa-facebook-f"></i></a>
-                        <a href="https://vk.com/knowerlife" aria-label="VK KNOWER LIFE"><i class="fab fa-vk"></i></a>
-                        <a href="https://wa.me/knowerlife" aria-label="WhatsApp KNOWER LIFE"><i class="fab fa-whatsapp"></i></a>
-                    </div>
-                </div>
-                <div class="footer-section">
-                    <h3>Подписка</h3>
-                    <form class="newsletter-form" id="newsletterForm">
-                        <input type="email" placeholder="Ваш email" class="form-control" required aria-label="Email для подписки">
-                        <button type="submit" class="btn">Подписаться</button>
-                    </form>
-                </div>
-            </div>
-            <div class="copyright">
-                <p>© KNOWER LIFE 2025. Все права защищены.</p>
-            </div>
+        <div class="xai-banner">
+            <p>© KNOWER LIFE 2025. Все права защищены.</p>
         </div>
     </footer>
-    <div class="scroll-top" id="scrollTop">
+
+    <div class="scroll-top" id="scrollTop" aria-label="Прокрутить наверх" role="button">
         <i class="fas fa-arrow-up"></i>
     </div>
 </body>
