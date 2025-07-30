@@ -3,14 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="KNOWER LIFE - искусственный интеллект нового поколения для глубокого и осмысленного взаимодействия. ">
+    <meta name="description" content="KNOWER LIFE - искусственный интеллект нового поколения для глубокого и осмысленного взаимодействия.">
     <meta name="keywords" content="KNOWER LIFE, искусственный интеллект, AI, интеллектуальный помощник">
+    <meta property="og:title" content="KNOWER LIFE - Искусственный интеллект нового поколения">
+    <meta property="og:description" content="KNOWER LIFE – ваш интеллектуальный партнер для решения задач с помощью передового ИИ.">
+    <meta property="og:image" content="https://knowerlife.ru/og-image.webp">
+    <meta property="og:url" content="https://knowerlife.ru">
+    <meta property="og:type" content="website">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:site" content="@knowerlife">
     <title>KNOWER LIFE - Искусственный интеллект нового поколения</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="https://fonts.gstatic.com/s/inter/v12/UcC73FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="manifest" href="/manifest.json">
     <script defer src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script async src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-XXXXXX-X"></script>
     <script>
@@ -67,7 +75,7 @@
                 "name": "Как начать использовать KNOWER LIFE?",
                 "acceptedAnswer": {
                     "@type": "Answer",
-                    "text": "Просто заполните форму обратной связи."
+                    "text": "Просто заполните форму обратной связи или зарегистрируйтесь через форму регистрации."
                 }
             }
         ]
@@ -1594,7 +1602,6 @@
                 <button class="lang-btn" data-lang="en">EN</button>
             </div>
 
-<!--
             <div class="theme-switcher">
                 <select id="themeSelect" aria-label="Выбрать тему">
                     <option value="light">Light Grayscale</option>
@@ -1602,7 +1609,6 @@
                     <option value="high-contrast">High Contrast</option>
                 </select>
             </div>
--->
 
             <div class="hamburger" id="hamburger" tabindex="0">
                 <i class="fas fa-bars"></i>
@@ -1641,10 +1647,7 @@
                     <div class="chatbot-response" id="chatResponse">Пример ответа: KNOWER LIFE может помочь с написанием текстов, анализом данных и многим другим!</div>
                 </div>
                 <a href="#contact" class="btn">Попробовать сейчас</a>
-                <div class="image-placeholder" style="width: 100%; height: 200px; margin-top: 2rem;" loading="lazy">
-                    <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                    Add Hero Image Here
-                </div>
+                <img src="hero-image.webp" srcset="hero-image-320w.webp 320w, hero-image-640w.webp 640w, hero-image-1280w.webp 1280w" sizes="(max-width: 600px) 320px, (max-width: 1200px) 640px, 1280px" alt="KNOWER LIFE Hero Image" loading="lazy" style="width: 100%; height: 200px; margin-top: 2rem; filter: grayscale(100%);">
             </div>
         </div>
     </section>
@@ -1656,7 +1659,8 @@
             <div class="text-center">
                 <h2>Обо мне</h2>
                 <p>KNOWER LIFE – это ваш интеллектуальный партнер, созданный для упрощения взаимодействия с цифровым миром. Я использую передовые технологии ИИ, чтобы предоставлять точные, релевантные и креативные решения для ваших задач. От генерации текстов до программирования и планирования – я здесь, чтобы помочь вам достичь большего.</p>
-                <svg class="infographic-svg" viewBox="0 0 200 200" aria-label="Инфографика возможностей ИИ">
+                <svg class="infographic-svg" viewBox="0 0 200 200" aria-label="Инфографика возможностей искусственного интеллекта KNOWER LIFE">
+                    <title>Инфографика возможностей ИИ</title>
                     <circle cx="100" cy="100" r="80" fill="var(--gray-20)" />
                     <circle cx="60" cy="60" r="20" fill="var(--gray-50)" />
                     <circle cx="140" cy="60" r="20" fill="var(--gray-50)" />
@@ -1735,10 +1739,10 @@
                 <h2>Примеры запросов</h2>
                 <p>Эти запросы могут быть адаптированы и изменены в соответствии с вашими потребностями и интересами. Чем я могу быть вам полезен? Практически всем! Моя сила – в универсальности и глубине знаний.</p>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="all">Все</button>
-                    <button class="filter-btn" data-filter="text">Текст</button>
-                    <button class="filter-btn" data-filter="programming">Программирование</button>
-                    <button class="filter-btn" data-filter="learning">Обучение</button>
+                    <button class="filter-btn active" data-filter="all" role="button">Все</button>
+                    <button class="filter-btn" data-filter="text" role="button">Текст</button>
+                    <button class="filter-btn" data-filter="programming" role="button">Программирование</button>
+                    <button class="filter-btn" data-filter="learning" role="button">Обучение</button>
                 </div>
             </div>
             <div class="grid grid-cols-4" id="exampleCards">
@@ -1815,10 +1819,7 @@
                     <div class="loader" id="xlsxLoader"></div>
                 </div>
                 <div id="showcaseTable"></div>
-                <div class="image-placeholder" style="width: 100%; max-width: 600px; height: 300px; margin: 2rem auto;" loading="lazy">
-                    <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                    Add Data Visualization Image Here
-                </div>
+                <canvas id="dataChart" style="max-width: 600px; margin: 2rem auto;"></canvas>
             </div>
         </div>
     </section>
@@ -1833,26 +1834,17 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="case-study-card" style="--i: 1">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                        Add Case Study Image Here
-                    </div>
+                    <img src="case-study-1.webp" srcset="case-study-1-320w.webp 320w, case-study-1-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Ускорение бизнес-процессов" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
                     <h3>Ускорение бизнес-процессов</h3>
                     <p>Компания увеличила эффективность на 30% благодаря автоматизации отчетов с помощью KNOWER LIFE.</p>
                 </div>
                 <div class="case-study-card" style="--i: 2">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                        Add Case Study Image Here
-                    </div>
+                    <img src="case-study-2.webp" srcset="case-study-2-320w.webp 320w, case-study-2-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Обучение программированию" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
                     <h3>Обучение программированию</h3>
                     <p>Студент освоил Python за 2 месяца с персонализированным планом от KNOWER LIFE.</p>
                 </div>
                 <div class="case-study-card" style="--i: 3">
-                    <div class="image-placeholder" style="width: 100%; height: 150px;" loading="lazy">
-                        <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                        Add Case Study Image Here
-                    </div>
+                    <img src="case-study-3.webp" srcset="case-study-3-320w.webp 320w, case-study-3-640w.webp 640w" sizes="(max-width: 600px) 320px, 640px" alt="Контент для соцсетей" loading="lazy" style="width: 100%; height: 150px; filter: grayscale(100%);">
                     <h3>Контент для соцсетей</h3>
                     <p>Блогер увеличил вовлеченность на 50% с креативными постами, созданными KNOWER LIFE.</p>
                 </div>
@@ -1870,15 +1862,15 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="video-card" style="--i: 1">
-                    <iframe src="https://www.youtube.com/embed/placeholder" title="Как использовать KNOWER LIFE для анализа данных" loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Как использовать KNOWER LIFE для анализа данных" loading="lazy"></iframe>
                     <h3>Анализ данных</h3>
                 </div>
                 <div class="video-card" style="--i: 2">
-                    <iframe src="https://www.youtube.com/embed/placeholder" title="Создание контента с KNOWER LIFE" loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Создание контента с KNOWER LIFE" loading="lazy"></iframe>
                     <h3>Создание контента</h3>
                 </div>
                 <div class="video-card" style="--i: 3">
-                    <iframe src="https://www.youtube.com/embed/placeholder" title="Программирование с KNOWER LIFE" loading="lazy"></iframe>
+                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Программирование с KNOWER LIFE" loading="lazy"></iframe>
                     <h3>Программирование</h3>
                 </div>
             </div>
@@ -1916,11 +1908,9 @@
                     Как начать использовать KNOWER LIFE?
                     <i class="fas fa-chevron-down"></i>
                 </div>
-<!--
                 <div class="faq-answer">
-                    Просто заполните форму обратной связи.
+                    Просто заполните форму обратной связи или зарегистрируйтесь через <a href="#signup">форму регистрации</a>.
                 </div>
--->
             </div>
         </div>
     </section>
@@ -1963,18 +1953,12 @@
             </div>
             <div class="grid grid-cols-3">
                 <div class="testimonial-card" style="--i: 1">
-                    <div class="image-placeholder" style="width: 80px; height: 80px;" loading="lazy">
-                        <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                        Add User Image Here
-                    </div>
+                    <img src="user-1.webp" srcset="user-1-80w.webp 80w" sizes="80px" alt="Анна, Аналитик данных" loading="lazy" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%);">
                     <p>"KNOWER LIFE помог мне автоматизировать анализ данных, сэкономив часы работы!"</p>
                     <cite>Анна, Аналитик данных</cite>
                 </div>
                 <div class="testimonial-card" style="--i: 2">
-                    <div class="image-placeholder" style="width: 80px; height: 80px;" loading="lazy">
-                        <!-- Replace with optimized WebP image, apply filter: grayscale(100%) -->
-                        Add User Image Here
-                    </div>
+                    <img src="user-2.webp" srcset="user-2-80w.webp 80w" sizes="80px" alt="Иван, Блогер" loading="lazy" style="width: 80px; height: 80px; border-radius: 50%; filter: grayscale(100%);">
                     <p>"Благодаря KNOWER LIFE я создал профессиональный контент для своего блога за считанные минуты."</p>
                     <cite>Иван, Блогер</cite>
                 </div>
