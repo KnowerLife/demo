@@ -46,7 +46,7 @@ const CONFIG = {
     MOBILE_BREAKPOINT: 768,
     MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB
     LOCALE: "ru-RU",
-    ANALYTICS_ID: "G-XXXXXXXXXX",
+    ANALYTICS_ID: "G-XXXXXXXXXX", // Replace with actual ID or load dynamically
     STATS_ANIMATION_DURATION: 2000,
     CHART_TYPES: ["bar", "line", "pie"],
     CHART_TYPE_SELECTOR_ID: "chartTypeSelector",
@@ -84,12 +84,16 @@ const utils = {
         return re.test(String(email).toLowerCase());
     },
 
+    validatePhone: (phone) => {
+        return /^\+7 \(\d{3}\) \d{3}-\d{2}-\d{2}$/.test(phone);
+    },
+
     formatNumber: (number) => {
         return new Intl.NumberFormat(CONFIG.LOCALE).format(number);
     },
 
     trackEvent: (category, action, label) => {
-        if (window.gtag && localStorage.getItem("analyticsConsent") === "true") {
+        if (window.gtag && localStorage.getItem("analyticsConsent") === "true" && CONFIG.ANALYTICS_ID !== "G-XXXXXXXXXX") {
             gtag("event", action, {
                 event_category: category,
                 event_label: label
@@ -283,14 +287,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Typed.js Animation
     const initTyped = () => {
-        if (!elements.typedText || typeof Typed !== "function") {
-            console.warn("Typed.js or typedText element not found");
+        if (!elements.typedText) {
+            console.warn("Typed text element not found");
+            return;
+        }
+        if (typeof Typed !== "function") {
+            console.warn("Typed.js library not loaded");
+            utils.showNotification("Ошибка загрузки анимации текста", "error");
             return;
         }
         new Typed(elements.typedText, CONFIG.TYPED_CONFIG);
     };
 
-    // Chatbot with API Placeholder
+    // Chatbot with API Integration
     const initChatbot = () => {
         if (!elements.chatInput || !elements.chatSubmit || !elements.chatResponse) return;
 
@@ -308,21 +317,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const fetchGrokResponse = async (query) => {
             try {
-                // Placeholder for real API call
-                utils.showNotification("API integration not implemented. Using simulated response.", "info");
-                return simulateGrokResponse(query);
-                // Example API call (uncomment when implemented):
-                /*
                 const response = await fetch(CONFIG.API_ENDPOINT, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ query })
                 });
+                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
                 const data = await response.json();
                 return data.response || simulateGrokResponse(query);
-                */
             } catch (error) {
                 console.error("API error:", error);
+                utils.showNotification("Ошибка связи с сервером, используется локальный ответ", "warning");
                 return simulateGrokResponse(query);
             }
         };
@@ -411,16 +416,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Form Submissions
     const initForms = () => {
+        // Initialize Inputmask for phone and email
+        if (typeof Inputmask !== "undefined") {
+            Inputmask({
+                mask: "+7 (999) 999-99-99",
+                placeholder: "_",
+                showMaskOnHover: false
+            }).mask(document.querySelectorAll("#phone, #signupPhone"));
+            
+            Inputmask({
+                alias: "email",
+                placeholder: " "
+            }).mask(document.querySelectorAll("#email, #signupEmail"));
+        } else {
+            console.warn("Inputmask library not loaded");
+        }
+
         if (elements.contactForm) {
             elements.contactForm.addEventListener("submit", (e) => {
                 e.preventDefault();
                 const email = elements.contactForm.querySelector("#email")?.value;
+                const phone = elements.contactForm.querySelector("#phone")?.value;
                 const button = elements.contactForm.querySelector("button[type='submit']");
                 button.disabled = true;
                 button.classList.add("loading");
 
                 if (!utils.validateEmail(email)) {
                     utils.showNotification("Пожалуйста, введите корректный email", "error");
+                    button.disabled = false;
+                    button.classList.remove("loading");
+                    return;
+                }
+
+                if (phone && !utils.validatePhone(phone)) {
+                    utils.showNotification("Пожалуйста, введите корректный номер телефона", "error");
                     button.disabled = false;
                     button.classList.remove("loading");
                     return;
@@ -468,6 +497,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 e.preventDefault();
                 const email = elements.signupForm.querySelector("#signupEmail")?.value;
                 const password = elements.signupForm.querySelector("#signupPassword")?.value;
+                const phone = elements.signupForm.querySelector("#signupPhone")?.value;
                 const button = elements.signupForm.querySelector("button[type='submit']");
                 button.disabled = true;
                 button.classList.add("loading");
@@ -481,6 +511,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
                 if (password.length < 6) {
                     utils.showNotification("Пароль должен быть не менее 6 символов", "error");
+                    button.disabled = false;
+                    button.classList.remove("loading");
+                    return;
+                }
+
+                if (phone && !utils.validatePhone(phone)) {
+                    utils.showNotification("Пожалуйста, введите корректный номер телефона", "error");
                     button.disabled = false;
                     button.classList.remove("loading");
                     return;
@@ -502,6 +539,12 @@ document.addEventListener("DOMContentLoaded", () => {
     // XLSX Processing with Chart Type Selector
     const initXLSX = () => {
         if (!elements.xlsxUpload || !elements.xlsxLoader || !elements.showcaseTable || !elements.dataChart) return;
+
+        if (typeof XLSX === "undefined") {
+            console.warn("XLSX library not loaded");
+            utils.showNotification("Ошибка загрузки библиотеки для обработки XLSX", "error");
+            return;
+        }
 
         const chartSelector = document.createElement("select");
         chartSelector.id = CONFIG.CHART_TYPE_SELECTOR_ID;
@@ -528,8 +571,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
             reader.onload = (event) => {
                 try {
-                    if (typeof XLSX === "undefined") throw new Error("XLSX library not loaded");
-
                     const data = new Uint8Array(event.target.result);
                     const workbook = XLSX.read(data, { type: "array" });
                     const firstSheet = workbook.SheetNames[0];
@@ -577,37 +618,42 @@ document.addEventListener("DOMContentLoaded", () => {
                         borderWidth: 1
                     }));
 
-                    window.chartInstance = new Chart(elements.dataChart.getContext("2d"), {
-                        type: chartSelector.value,
-                        data: { labels, datasets },
-                        options: {
-                            responsive: true,
-                            scales: chartSelector.value !== "pie" ? { y: { beginAtZero: true } } : {},
-                            plugins: {
-                                legend: { position: "top" },
-                                title: { display: true, text: "Данные из XLSX" }
-                            }
-                        }
-                    });
-
-                    chartSelector.addEventListener("change", () => {
-                        if (window.chartInstance) {
-                            window.chartInstance.destroy();
-                            window.chartInstance = new Chart(elements.dataChart.getContext("2d"), {
-                                type: chartSelector.value,
-                                data: { labels, datasets },
-                                options: {
-                                    responsive: true,
-                                    scales: chartSelector.value !== "pie" ? { y: { beginAtZero: true } } : {},
-                                    plugins: {
-                                        legend: { position: "top" },
-                                        title: { display: true, text: "Данные из XLSX" }
-                                    }
+                    if (typeof Chart !== "undefined") {
+                        window.chartInstance = new Chart(elements.dataChart.getContext("2d"), {
+                            type: chartSelector.value,
+                            data: { labels, datasets },
+                            options: {
+                                responsive: true,
+                                scales: chartSelector.value !== "pie" ? { y: { beginAtZero: true } } : {},
+                                plugins: {
+                                    legend: { position: "top" },
+                                    title: { display: true, text: "Данные из XLSX" }
                                 }
-                            });
-                            utils.trackEvent("Chart", "Change Type", chartSelector.value);
-                        }
-                    });
+                            }
+                        });
+
+                        chartSelector.addEventListener("change", () => {
+                            if (window.chartInstance) {
+                                window.chartInstance.destroy();
+                                window.chartInstance = new Chart(elements.dataChart.getContext("2d"), {
+                                    type: chartSelector.value,
+                                    data: { labels, datasets },
+                                    options: {
+                                        responsive: true,
+                                        scales: chartSelector.value !== "pie" ? { y: { beginAtZero: true } } : {},
+                                        plugins: {
+                                            legend: { position: "top" },
+                                            title: { display: true, text: "Данные из XLSX" }
+                                        }
+                                    }
+                                });
+                                utils.trackEvent("Chart", "Change Type", chartSelector.value);
+                            }
+                        });
+                    } else {
+                        console.warn("Chart.js library not loaded");
+                        utils.showNotification("Ошибка загрузки библиотеки для графиков", "error");
+                    }
 
                     elements.xlsxLoader.style.display = "none";
                     utils.showNotification("Файл успешно обработан!");
@@ -627,68 +673,82 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Stats Animation
     const initStats = () => {
-        if (!elements.statsSection || !elements.statsNumbers.length) {
-            throw new Error("Stats section or stats numbers not found");
+    if (!elements.statsSection || !elements.statsNumbers.length) {
+        throw new Error("Stats section or stats numbers not found");
+    }
+
+    const fetchStats = async () => {
+        try {
+            const response = await fetch(`${CONFIG.API_ENDPOINT}/stats`);
+            if (!response.ok) throw new Error("Failed to fetch stats");
+            const data = await response.json();
+            return [
+                { id: "statsQueries", target: data.queries || 10000 },
+                { id: "statsFiles", target: data.files || 5000 },
+                { id: "statsUsers", target: data.users || 2000 }
+            ];
+        } catch (error) {
+            console.error("Error fetching stats:", error);
+            return [
+                { id: "statsQueries", target: 10000 },
+                { id: "statsFiles", target: 5000 },
+                { id: "statsUsers", target: 2000 }
+            ];
         }
-
-        const statsElements = [
-            { id: "statsQueries", target: 10000 },
-            { id: "statsFiles", target: 5000 },
-            { id: "statsUsers", target: 2000 }
-        ];
-
-        statsElements.forEach(({ id, target }) => {
-            const element = document.getElementById(id);
-            if (element) {
-                element.setAttribute("data-target", target);
-                element.textContent = "0";
-            } else {
-                console.warn(`Stats element ${id} not found`);
-            }
-        });
-
-        const animateStats = () => {
-            elements.statsNumbers.forEach((stat) => {
-                const target = parseInt(stat.dataset.target) || 0;
-                if (target === 0) {
-                    console.warn(`No valid data-target for stat element: ${stat.id}`);
-                    return;
-                }
-
-                let start = 0;
-                const duration = CONFIG.STATS_ANIMATION_DURATION;
-                const startTime = performance.now();
-
-                const updateCount = (currentTime) => {
-                    const elapsed = currentTime - startTime;
-                    const progress = Math.min(elapsed / duration, 1);
-                    const value = Math.round(start + (target - start) * progress);
-                    stat.textContent = utils.formatNumber(value);
-
-                    if (progress < 1) {
-                        requestAnimationFrame(updateCount);
-                    } else {
-                        stat.textContent = utils.formatNumber(target);
-                    }
-                };
-
-                requestAnimationFrame(updateCount);
-            });
-            utils.trackEvent("Stats", "View", "Animated");
-        };
-
-        const observer = new IntersectionObserver(
-            (entries) => {
-                if (entries[0].isIntersecting) {
-                    animateStats();
-                    observer.disconnect();
-                }
-            },
-            { threshold: 0.5, rootMargin: "0px" }
-        );
-
-        observer.observe(elements.statsSection);
     };
+
+    const animateStats = (statsElements) => {
+        elements.statsNumbers.forEach((stat) => {
+            const target = parseInt(stat.dataset.target) || 0;
+            if (target === 0) {
+                console.warn(`No valid data-target for stat element: ${stat.id}`);
+                return;
+            }
+
+            let start = 0;
+            const duration = CONFIG.STATS_ANIMATION_DURATION;
+            const startTime = performance.now();
+
+            const updateCount = (currentTime) => {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const value = Math.round(start + (target - start) * progress);
+                stat.textContent = utils.formatNumber(value);
+
+                if (progress < 1) {
+                    requestAnimationFrame(updateCount);
+                } else {
+                    stat.textContent = utils.formatNumber(target);
+                }
+            };
+
+            requestAnimationFrame(updateCount);
+        });
+        utils.trackEvent("Stats", "View", "Animated");
+    };
+
+    const observer = new IntersectionObserver(
+        async (entries) => {
+            if (entries[0].isIntersecting) {
+                const statsElements = await fetchStats();
+                statsElements.forEach(({ id, target }) => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        element.setAttribute("data-target", target);
+                        element.textContent = "0";
+                    } else {
+                        console.warn(`Stats element ${id} not found`);
+                    }
+                });
+                animateStats();
+                observer.disconnect();
+            }
+        },
+        { threshold: 0.5, rootMargin: "0px" }
+    );
+
+    observer.observe(elements.statsSection);
+};
 
     // Lazy Load Images and Videos
     const initLazyLoad = () => {
@@ -911,26 +971,41 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // Search Functionality
-    const initSearch = () => {
-        if (!elements.searchInput || !elements.searchButton) return;
+const initSearch = () => {
+    if (!elements.searchInput || !elements.searchButton) return;
 
-        elements.searchButton.addEventListener("click", () => {
-            const query = utils.sanitizeInput(elements.searchInput.value.trim());
-            if (!query) {
-                utils.showNotification("Пожалуйста, введите поисковый запрос", "error");
-                return;
+    const searchContent = () => {
+        const query = utils.sanitizeInput(elements.searchInput.value.trim().toLowerCase());
+        if (!query) {
+            utils.showNotification("Пожалуйста, введите поисковый запрос", "error");
+            return;
+        }
+
+        const sections = document.querySelectorAll(".section");
+        let found = false;
+        sections.forEach((section) => {
+            const text = section.textContent.toLowerCase();
+            if (text.includes(query)) {
+                section.scrollIntoView({ behavior: "smooth" });
+                section.classList.add("highlight");
+                setTimeout(() => section.classList.remove("highlight"), 2000);
+                found = true;
             }
-            utils.showNotification(`Поиск: ${query}. Функция поиска в разработке.`, "info");
-            utils.trackEvent("Search", "Query", query);
         });
 
-        elements.searchInput.addEventListener("keydown", (e) => {
-            if (e.key === "Enter") {
-                e.preventDefault();
-                elements.searchButton.click();
-            }
-        });
+        utils.showNotification(found ? `Найдено совпадение для: ${query}` : `Ничего не найдено для: ${query}`, found ? "success" : "info");
+        utils.trackEvent("Search", "Query", query);
     };
+
+    elements.searchButton.addEventListener("click", searchContent);
+
+    elements.searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+            e.preventDefault();
+            searchContent();
+        }
+    });
+};
 
     // AI Capabilities Modal
     const initAICapabilities = () => {
@@ -1098,7 +1173,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Analytics
     const initAnalytics = () => {
-        if (localStorage.getItem("analyticsConsent") !== "true") return;
+        if (localStorage.getItem("analyticsConsent") !== "true" || CONFIG.ANALYTICS_ID === "G-XXXXXXXXXX") {
+            console.warn("Analytics not initialized: Consent missing or invalid ID");
+            return;
+        }
 
         const script = document.createElement("script");
         script.src = `https://www.googletagmanager.com/gtag/js?id=${CONFIG.ANALYTICS_ID}`;
