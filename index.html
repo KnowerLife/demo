@@ -156,15 +156,16 @@
         }
 
         header {
-            background-color: var(--white);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 1.5rem 0;
-            border-bottom: 1px solid var(--gray-20);
-            box-shadow: var(--shadow-sm);
-            transition: var(--transition);
-        }
+    background-color: var(--white);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    padding: 1rem 0; /* Уменьшены отступы для компактности */
+    border-bottom: 1px solid var(--gray-20);
+    box-shadow: var(--shadow-sm);
+    transition: var(--transition);
+    min-height: 80px; /* Минимальная высота шапки */
+}
 
         .hero {
             display: flex;
@@ -214,11 +215,13 @@
         }
 
         .header-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 1rem;
-        }
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap; /* Разрешить перенос элементов */
+    min-height: 60px; /* Минимальная высота контейнера */
+}
 
         .logo {
             font-size: 1.8rem;
@@ -247,10 +250,11 @@
         }
 
         .nav-menu {
-            display: flex;
-            list-style: none;
-            gap: 1.5rem;
-        }
+    display: flex;
+    list-style: none;
+    gap: 1rem; /* Уменьшенный зазор */
+    align-items: center;
+}
 
         .nav-menu li {
             opacity: 0;
@@ -264,14 +268,18 @@
         }
 
         .nav-menu a {
-            text-decoration: none;
-            color: var(--gray-70);
-            font-weight: 500;
-            font-size: 1.1rem;
-            padding: 0.5rem 1rem;
-            position: relative;
-            transition: var(--transition);
-        }
+    text-decoration: none;
+    color: var(--gray-70);
+    font-weight: 500;
+    font-size: 1rem; /* Меньший размер шрифта */
+    padding: 0.5rem 0.8rem;
+    position: relative;
+    transition: var(--transition);
+    max-width: 150px; /* Ограничение ширины */
+    white-space: nowrap; /* Предотвращение переноса текста */
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
         .nav-menu a:after {
             content: '';
@@ -1444,6 +1452,27 @@
             transform: scale(1.1);
         }
 
+        .profile-menu a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+}
+
+.profile-menu .dropdown-content {
+    min-width: 150px; /* Уменьшенная ширина для профиля */
+    right: 0; /* Выравнивание по правому краю */
+    left: auto;
+}
+
+@media (max-width: 768px) {
+    .profile-menu .dropdown-content {
+        position: static;
+        box-shadow: none;
+        padding-left: 1.5rem;
+    }
+}
+
         .social-icons a:focus {
             outline: 2px solid var(--white);
             outline-offset: 2px;
@@ -1627,8 +1656,15 @@
                         <a href="https://x.ai/api" aria-label="API KNOWER LIFE">API</a>
                     </div>
                 </li>
+                <li style="--i: 5" class="dropdown profile-menu">
+                <a href="#" aria-label="Профиль"><i class="fas fa-user"></i>Профиль</a>
+                <div class="dropdown-content">
+                        <a href="#profile" aria-label="Мой профиль">Мой профиль</a>
+                        <a href="#settings" aria-label="Настройки">Настройки</a>
+                        <a href="#logout" aria-label="Выйти">Выйти</a>
+                    </div>
+                </li>
                 <li style="--i: 4"><a href="#advantages" aria-label="Преимущества">Преимущества</a></li>
-                <li style="--i: 5"><a href="#profile" aria-label="Мой профиль">Мой профиль</a></li>
                 <li style="--i: 6"><a href="#contact" aria-label="Контакты">Контакты</a></li>
             </ul>
         </div>
