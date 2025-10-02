@@ -1,16 +1,17 @@
 {
-    "name": "KNOWER LIFE",
+    "name": "KNOWER LIFE - AI Intelligence Platform",
     "short_name": "KNOWER",
     "start_url": "/",
     "display": "standalone",
     "background_color": "#ffffff",
-    "theme_color": "#007bff",
-    "description": "KNOWER LIFE - ваш интеллектуальный партнер с передовыми возможностями ИИ.",
+    "theme_color": "#000000",
+    "description": "Продвинутая платформа искусственного интеллекта для решения сложных задач",
     "lang": "ru-RU",
     "dir": "ltr",
     "orientation": "portrait",
     "scope": "/",
     "prefer_related_applications": false,
+    "categories": ["productivity", "education", "utilities"],
     "icons": [
         {
             "src": "/icon-192.png",
@@ -29,6 +30,20 @@
             "sizes": "144x144",
             "type": "image/png",
             "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "/screenshot-wide.png",
+            "sizes": "1280x720",
+            "type": "image/png",
+            "form_factor": "wide"
+        },
+        {
+            "src": "/screenshot-narrow.png",
+            "sizes": "375x812",
+            "type": "image/png",
+            "form_factor": "narrow"
         }
     ]
 }
