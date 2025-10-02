@@ -308,6 +308,76 @@
             </div>
         </section>
 
+        <!-- Добавить после секции benefits -->
+<section id="pricing" class="section pricing-section">
+    <div class="container text-center">
+        <h2>Выберите свой тариф</h2>
+        <p>Найдите идеальный план для ваших потребностей в искусственном интеллекте</p>
+        
+        <div class="pricing-cards">
+            <!-- Бесплатный тариф -->
+            <div class="pricing-card">
+                <h3>Бесплатно</h3>
+                <div class="pricing-price">0₽</div>
+                <div class="pricing-period">навсегда</div>
+                <ul class="pricing-features">
+                    <li>100 запросов в месяц</li>
+                    <li>Базовые функции ИИ</li>
+                    <li>Поддержка по email</li>
+                    <li>Обработка файлов до 5MB</li>
+                    <li>Доступ к сообществу</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="knowerApp.selectPlan('free')">
+                    Начать бесплатно
+                </button>
+            </div>
+
+            <!-- Pro тариф -->
+            <div class="pricing-card featured">
+                <h3>Pro</h3>
+                <div class="pricing-price">999₽</div>
+                <div class="pricing-period">в месяц</div>
+                <ul class="pricing-features">
+                    <li>5000 запросов в месяц</li>
+                    <li>Расширенные функции ИИ</li>
+                    <li>Приоритетная поддержка</li>
+                    <li>Обработка файлов до 50MB</li>
+                    <li>API доступ</li>
+                    <li>Расширенная аналитика</li>
+                    <li>Настройка моделей</li>
+                </ul>
+                <button class="btn" onclick="knowerApp.selectPlan('pro')">
+                    Попробовать бесплатно 14 дней
+                </button>
+            </div>
+
+            <!-- Enterprise тариф -->
+            <div class="pricing-card">
+                <h3>Enterprise</h3>
+                <div class="pricing-price">Индивидуально</div>
+                <div class="pricing-period">по запросу</div>
+                <ul class="pricing-features">
+                    <li>Неограниченные запросы</li>
+                    <li>Все функции Pro</li>
+                    <li>Выделенная поддержка 24/7</li>
+                    <li>Кастомные модели ИИ</li>
+                    <li>On-premise развертывание</li>
+                    <li>SLA гарантии</li>
+                    <li>Персональный менеджер</li>
+                </ul>
+                <button class="btn btn-secondary" onclick="knowerApp.contactSales()">
+                    Связаться с отделом продаж
+                </button>
+            </div>
+        </div>
+
+        <div class="security-badge">
+            <i class="fas fa-shield-alt"></i>
+            <span>Все планы включают безопасность enterprise-уровня</span>
+        </div>
+    </div>
+</section>
+
         <section class="section" id="testimonials">
             <div class="container text-center">
                 <h2>Что говорят пользователи</h2>
